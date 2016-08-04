@@ -1,5 +1,6 @@
 package org.asmitaforwomen.asmitashop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,26 +20,41 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import rb.popview.PopField;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    PopField popfab;
+    FloatingActionButton fab;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSSH();
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        popfab= PopField.attach2Window(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+               // Snackbar.make(view, "Please Add some items in your Cart first!", Snackbar.LENGTH_LONG)
+                     //   .setAction("Action", null).show();
+
+                Intent i = new Intent(MainActivity.this,KartActivity.class);
+                startActivity(i);
+                popfab.popView(fab,fab,true);
+
+
             }
         });
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

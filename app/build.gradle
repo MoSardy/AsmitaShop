@@ -27,6 +27,7 @@ dependencies {
     compile 'com.msg91.sendotp.library:library:2.7'
     compile 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'
     compile 'rb.popview:popview:0.1.0'
+    compile 'com.github.florent37:viewanimator:1.0.4'
 
 
 }

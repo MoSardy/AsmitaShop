@@ -2,6 +2,7 @@ package org.asmitaforwomen.asmitashop;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -17,7 +18,13 @@ import android.view.MenuItem;
 import android.util.Base64;
 import android.util.Log;import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;import java.security.MessageDigest;
+import android.content.pm.Signature;
+import android.widget.Toast;
+
+import com.github.florent37.viewanimator.AnimationListener;
+import com.github.florent37.viewanimator.ViewAnimator;
+
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import rb.popview.PopField;
@@ -40,19 +47,51 @@ public class MainActivity extends AppCompatActivity
         popfab= PopField.attach2Window(this);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ViewAnimator
+                        .animate(fab)
+                        .rotation(360)
+                        .accelerate()
+                        .duration(500)
+                        .thenAnimate(fab)
+                        .rotation(360)
+                        .descelerate()
+                        .duration(500)
+                        .start();
+            }
+        }, 500);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                // Snackbar.make(view, "Please Add some items in your Cart first!", Snackbar.LENGTH_LONG)
                      //   .setAction("Action", null).show();
 
-                Intent i = new Intent(MainActivity.this,KartActivity.class);
-                startActivity(i);
-                popfab.popView(fab,fab,true);
+                ViewAnimator
+                        .animate(fab)
+                        .translationY(0, -950)
+                        .descelerate()
+                        .duration(300)
+                        .onStop(new AnimationListener.Stop() {
+                            @Override
+                            public void onStop() {
+
+                                Intent i = new Intent(MainActivity.this,KartActivity.class);
+                                startActivity(i);
+
+                            }
+                        })
+                        .start();
+
+
 
 
             }
         });
+
+
 
 
 
@@ -64,6 +103,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
     }
 
     private void getSSH() {
@@ -85,15 +127,31 @@ public class MainActivity extends AppCompatActivity
         Log.i("SecretKey = ",Base64.encodeToString(md.digest(), Base64.DEFAULT));
 
     }
-
+    boolean doubleBackToExitPressedOnce = false;
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce=false;
+                }
+            }, 2000);
         }
+
+
     }
 
     @Override
